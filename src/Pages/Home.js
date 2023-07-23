@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import ProductCard from "../Component/ProductCard";
 
 const Home = () => {
-    return (
-        <div>
-            <h1>home</h1>
-        </div>
-    );
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch("Products.json")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
+    console.log(products);
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-14 mx-auto my-10">
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
+      ))}
+    </div>
+  );
 };
 
 export default Home;
