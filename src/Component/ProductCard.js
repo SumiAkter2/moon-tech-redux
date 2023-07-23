@@ -2,15 +2,17 @@ import React from "react";
 import { BiListPlus } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { ADD_TO_CART } from "../Redux/ActionType/actionTypes";
 import { addToCart } from "../Redux/actionCreator/ProductActors";
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../Redux/ActionType/actionTypes";
+import { useLocation } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const {pathname} = useLocation();
   return (
     <div className="shadow-lg relative rounded-3xl border p-3 flex flex-col text-indigo-900">
       <div className="rounded-full grid place-items-center absolute top-2 right-2 bg-indigo-500 text-white h-8 w-8 font-bold ">
-        <p> {product.quantity}0 </p>
+        {/* <p> {product.quantity}0 </p> */}
       </div>
 
       <div className="h-52 w-52 mx-auto">
@@ -30,27 +32,36 @@ const ProductCard = ({ product }) => {
         </ul>
       </div>
       <div className="flex gap-2 mt-5">
-        <button
-          onClick={() => dispatch(addToCart(product))}
-          className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
-        >
-          Add to cart
-        </button>
+        {!pathname.includes("cart") && (
+          <button
+            onClick={() => dispatch({ type: ADD_TO_CART, payload: product })}
+            className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
+          >
+            Add to cart
+          </button>
+        )}
 
-        <button
-          title="Add to wishlist"
-          className="bg-indigo-500  py-1 px-2 rounded-full"
-        >
-          <BiListPlus className="text-white" />
-        </button>
+        {!pathname.includes("cart") && (
+          <button
+            title="Add to wishlist"
+            className="bg-indigo-500  py-1 px-2 rounded-full"
+          >
+            <BiListPlus className="text-white" />
+          </button>
+        )}
 
-        <button
-          title="Remove"
-          className="flex justify-between px-3 bg-red-500 text-white p-1 rounded-full flex-1"
-        >
-          <p>Remove</p>
-          <MdDeleteForever size="25" />
-        </button>
+        {pathname.includes("cart") && (
+          <button
+            onClick={() =>
+              dispatch({ type: REMOVE_FROM_CART, payload: product })
+            }
+            title="Remove"
+            className="flex justify-between px-3 bg-red-500 text-white p-1 rounded-full flex-1"
+          >
+            <p>Remove</p>
+            <MdDeleteForever size="25" />
+          </button>
+        )}
       </div>
     </div>
   );
