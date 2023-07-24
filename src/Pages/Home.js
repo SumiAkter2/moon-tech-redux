@@ -5,8 +5,8 @@ import { TOGGLE_BRAND, TOGGLE_STOCK } from "../Redux/ActionType/actionTypes";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const filter = useSelector((state) => state.filter.filters);
-  const { brands, stock } = filter;
+  const filters = useSelector((state) => state.filter.filters);
+  const { brands, stock } = filters;
   useEffect(() => {
     fetch("http://localhost:5000/products")
       .then((res) => res.json())
@@ -14,32 +14,35 @@ const Home = () => {
   }, []);
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  // console.log(state);
+  console.log(state);
   const activeClass = "text-white  bg-indigo-500 border-white";
-   let content;
+    let content;
 
-   if (products.length) {
-     content = products.map((product) => (
-       <ProductCard key={product.model} product={product} />
-     ));
-   }
+    if (products.length) {
+      content = products.map((product) => (
+        <ProductCard key={product.model} product={product} />
+      ));
+    }
 
-   if (products.length && (stock || brands.length)) {
-     content = products
-       .filter((product) => {
-         if (stock) {
-           return product.status === true;
-         }
-         return product;
-       })
-       .filter((product) => {
-         if (brands.length) {
-           return brands.includes(product.brand);
-         }
-         return product;
-       })
-       .map((product) => <ProductCard key={product.model} product={product} />);
-   }
+    if (products.length && (stock || brands.length)) {
+      content = products
+        .filter((product) => {
+          if (stock) {
+            return product.status === true;
+          }
+          return product;
+        })
+        .filter((product) => {
+          if (brands.length) {
+            return brands.includes(product.brand);
+          }
+          return product;
+        })
+        .map((product) => (
+          <ProductCard key={product.model} product={product} />
+        ));
+    }
+
   return (
     <div className="max-w-7xl gap-14 mx-auto my-10">
       <div className="mb-10 flex justify-end gap-5">
